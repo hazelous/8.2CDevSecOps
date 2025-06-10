@@ -1,0 +1,8 @@
+---DocPlanner---
+select * --i.provider_type 
+from issue i 
+where i.organization_id = 13187654
+--and title like '%networking issues%'
+and i.provider_key in ('TPL-1628','TPL-1992','TPL-80','TPL-2028')
+and i.provider_type ='Epic'
+--group by i.provider_type
