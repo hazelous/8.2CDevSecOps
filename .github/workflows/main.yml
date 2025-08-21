@@ -71,7 +71,7 @@ jobs:
         with:
           host: ${{ env.DEPLOYMENT_IP }}
           username: ${{ env.DEPLOY_USERNAME }}
-          key_path: /ubuntu/.ssh/id_rsa
+          key_path: /home/ubuntu/.ssh/id_rsa
           script: |
             echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
             docker pull xenjutsu/nodejsgoof:latest
