@@ -1,0 +1,81 @@
+name: Security Scan and Docker Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  checkout:
+    name: Checkout Code
+    runs-on: self-hosted
+    outputs:
+      sha: ${{ steps.get_sha.outputs.sha }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Save commit SHA
+        id: get_sha
+        run: echo "sha=${{ github.sha }}" >> "$GITHUB_OUTPUT"
+
+  setup_node:
+    name: Install Dependencies
+    runs-on: self-hosted
+    needs: checkout
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: npm install
+
+  docker_build:
+    name: Build & Push Docker Image
+    runs-on: self-hosted
+    needs: [setup_node]
+    env:
+      DEPLOY_USERNAME: ubuntu
+      DEPLOYMENT_IP: 192.168.1.12
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t xenjutsu/nodejsgoof:latest .
+
+      - name: Push Docker Image
+        run: docker push xenjutsu/nodejsgoof:latest
+        
+  deploy:
+    name: Deploy Docker Image via SSH
+    runs-on: self-hosted
+    needs: docker_build
+    env:
+      DEPLOY_USERNAME: ubuntu
+      DEPLOYMENT_IP: 192.168.1.12
+      DOCKERHUB_CREDENTIALS_USR: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_CREDENTIALS_PSW: ${{ secrets.DOCKERHUB_PASSWORD }}
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.DEPLOYMENT_IP }}
+          username: ${{ env.DEPLOY_USERNAME }}
+          key_path: /ubuntu/.ssh/id_rsa
+          script: |
+            echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
+            docker pull xenjutsu/nodejsgoof:latest
+            docker rm --force mongodb || true
+            docker run --detach --name mongodb -p 27017:27017 mongo:3
+            docker rm --force nodejsgoof || true
+            docker run -it --detach --name nodejsgoof --network host xenjutsu/nodejsgoof:latest
