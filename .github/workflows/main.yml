@@ -62,7 +62,7 @@ jobs:
     needs: docker_build
     env:
       DEPLOY_USERNAME: ubuntu
-      DEPLOYMENT_IP: 192.168.1.12
+      DEPLOYMENT_IP: 192.168.0.12
       DOCKERHUB_CREDENTIALS_USR: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_CREDENTIALS_PSW: ${{ secrets.DOCKERHUB_PASSWORD }}
     steps:
