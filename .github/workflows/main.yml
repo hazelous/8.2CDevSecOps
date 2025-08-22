@@ -66,12 +66,18 @@ jobs:
       DOCKERHUB_CREDENTIALS_USR: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_CREDENTIALS_PSW: ${{ secrets.DOCKERHUB_PASSWORD }}
     steps:
+      - name: Write SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ env.DEPLOYMENT_IP }}
           username: ${{ env.DEPLOY_USERNAME }}
-          key_path: /home/ubuntu/.ssh/id_rsa
+          key_path: ~/.ssh/id_rsa
           script: |
             echo "${DOCKERHUB_CREDENTIALS_PSW}" | docker login -u "${DOCKERHUB_CREDENTIALS_USR}" --password-stdin
             docker pull xenjutsu/nodejsgoof:latest
