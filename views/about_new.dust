@@ -10,7 +10,7 @@
   <h1 id="page-title">{title}</h1>
   <h2 id="page-title">{subhead}</h2>
 
-  <p>The BESTest todo app evar</p>
+  <p>The BESTest todo app evar (edited)</p>
 
   <div style="position:absolute; bottom:0;">Device string (debug): {device}</div>
 
