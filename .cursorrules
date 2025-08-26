@@ -1,0 +1,10 @@
+# Cursor Rules for Goof Demo Application
+
+## Security-First Development Workflow
+
+### Mandatory Security Scanning
+- **CRITICAL**: If any new first-party code is written, immediately run Snyk Code security scan
+- If security issues are returned based on newly introduced or modified code only, attempt to fix those issues only
+- Rescan the code after fixing issues to ensure they were resolved and no new issues were introduced
+- Repeat this process until no newly added code issues are found
+- Always provide a summary at the end: how many issues were found and how many were fixed
