@@ -1,0 +1,71 @@
+openapi: 3.0.1
+info:
+  title: NodeJSGoof
+  description: NodeJS Goof demo application (Node.js) — used for security testing and developer enablement
+  x-cortex-type: service
+  x-cortex-tag: nodejs-goof
+
+  x-cortex-git:
+    github:
+      repository: jonathan-gruber-org/nodejs-goof
+
+  x-cortex-owners:
+    - name: platform-engineering
+      type: group
+      provider: CORTEX
+    - type: slack
+      channel: team-platform-eng
+    - type: email
+      email: platform-engineering@company.com
+
+  x-cortex-oncall:
+    pagerduty:
+      id: TODO_PD_SERVICE_ID
+      type: SERVICE
+
+  x-cortex-apm:
+    newrelic:
+      alias: NodeJSGoof
+      applicationId: TODO_NEWRELIC_APP_ID
+
+  x-cortex-slos:
+    prometheus:
+      - slo: 0.999
+        name: availability
+        alias: nodejs-goof-availability
+        errorQuery: 'slo:sli_error:amount1w{category="availability",env="prod",service="nodejs-goof"}'
+        totalQuery: 'slo:sli_total:amount1w{category="availability",env="prod",service="nodejs-goof"}'
+
+  x-cortex-link:
+    - url: ./README.md
+      name: Service Documentation
+      type: DOCUMENTATION
+    - url: https://nodejs-goof.example.com/health # TODO: update or remove
+      name: Health Check
+      type: HEALTHCHECK
+
+  x-cortex-issues:
+    jira:
+      projects:
+        - PLAT
+
+  x-cortex-dashboards:
+    embeds:
+      - url: https://company.grafana.net/d/nodejs-goof-overview/nodejs-goof-overview # TODO: update or remove
+        type: grafana
+        name: Service Overview
+
+  x-cortex-static-analysis:
+    sonarqube:
+      project: nodejs-goof
+    MEND:
+      projectIds:
+        - TODO_MEND_PROJECT_ID
+
+  x-cortex-dependencies:
+    - tag: auth_service
+      type: service
+      method: HTTP
+    - tag: application_database
+      type: database
+      method: REST
