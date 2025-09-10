@@ -105,7 +105,7 @@ app.post('/diagnostics', (req, res) => {
   // This allows an attacker to run arbitrary commands on your server.
   // Snyk and other static analysis tools should flag this line as a Command Injection flaw.
   //
-  exec(`nslookup ${domain}`, (error, stdout, stderr) => {
+  execFile('nslookup', [domain], (error, stdout, stderr) => {
     //
     // ######################################################################
 
