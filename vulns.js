@@ -41,7 +41,7 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(session({
-  secret: 'keyboard cat',
+  secret: process.env.SESSION_SECRET,
   name: 'connect.sid',
   cookie: { path: '/' }
 }))
