@@ -9,14 +9,13 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                bat 'node -v && npm -v'
                 bat 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'npm test || exit /b 0'
+                bat 'npm test || exit /b 0'  // Allows pipeline to continue despite test failures
             }
         }
 
